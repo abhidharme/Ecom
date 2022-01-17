@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+            display: grid;
+            grid-template-columns: repeat(8,200px);
+            grid-gap: 20px;
+            
+        }
+        #container>div{
+            border: 1px solid wheat;
+            width: 200px;
+            height: 320px;
+        }
+        #container>div>image{
+            height: 100%;
+           
+            width: 100%;
+        }
+        h2{
+            display: inline-block;
+        }
+        #btn3{
+            background-color: gold;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        #btn3:hover{
+            background-color: goldenrod;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <h2 >Cart Items :</h2>
+    <button id="btn3">0</button>
+    <h1>product page</h1>
+    <div id="container"></div>
+
+    <select id="select" onchange="sortarr()">
+        <option value="low">low to high</option>
+        <option value="high">high to low</option>
+    </select>
+     
+</body>
+</html>
+
+<script>
+    var products = JSON.parse(localStorage.getItem("shoppingItem"));
+           display(products);
+var cart = JSON.parse(localStorage.getItem("cartItem")) || [];
+
+document.querySelector("#btn3").textContent = cart.length;
+document.querySelector("#btn3").addEventListener("click" , function(){
+     window.location.href = "mycart.html";
+});
+
+function sortarr (){
+    var selected = document.querySelector("#select").value;
+     
+if(selected == "high"){
+    products.sort(function (a,b){
+        return b.Price - a.Price;
+    });
+} 
+else if(selected == "low"){
+    products.sort(function (a,b){
+        return a.Price - b.Price;
+    });
+} 
+
+display(products);
+    console.log(products);
+   
+}
+
+    function display(products){
+       document.querySelector("#container").textContent = "";
+    products.map(function (elem){
+    
+       var div1 = document.createElement("div");
+
+
+       var image = document.createElement("img");
+       image.setAttribute("src" , elem.Url);
+       image.style.height = "60%";
+       image.style.width = "100%";
+
+       var h4 = document.createElement("h4");
+       h4.textContent = elem.Name;
+       var rs = document.createElement("h2");
+       rs.textContent = "Rs"
+
+        var h2 = document.createElement("h2");
+        h2.textContent = elem.Price;
+
+        var div2 = document.createElement("div") 
+        div2.style.display = "flex";
+        div2.style.justifyContent = "space-evenly";
+
+        var div3 = document.createElement("div");
+        div3.style.display = "flex";
+        var btn1 = document.createElement("button");
+        btn1.textContent = "BUY NOW";
+        btn1.style.marginLeft = "40px";
+        btn1.style.backgroundColor = "gold"
+
+
+
+        var btn = document.createElement("button");
+        btn.textContent = "ADD CART";
+        btn.style.backgroundColor = "gold"
+        btn.addEventListener("click" , function(){
+            addcart(elem);
+        });
+       
+        div3.append(btn,btn1);
+        div2.append(rs,h2,h4)
+
+       div1.append(image,div2,div3);
+
+       document.querySelector("#container").append(div1);
+
+    });
+
+    function addcart(elem){
+     cart.push(elem);
+     localStorage.setItem("cartItem" , JSON.stringify(cart));
+    //  console.log(cart);
+    //  display(products);
+     console.log(elem);
+    }
+}
+</script>
